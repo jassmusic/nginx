@@ -1,3 +1,10 @@
+<?php 
+$filename = $_GET['filename']; 
+if ($filename == '') {
+  $filename = 'home';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +13,7 @@
   <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.19/marked.min.js"></script>
   <style rel="stylesheet">code.error {line-height:2rem;font-size:2rem;color:#F43;padding:2rem;display: block;}</style>
   <script>
-    const FILENAME = "https://raw.githubusercontent.com/soju6jan/nginx_support/main/<?php echo $_GET['filename']; ?>.md";
+    const FILENAME = "https://raw.githubusercontent.com/soju6jan/nginx_support/main/<?php echo $filename; ?>.md";
     const set = (t) => document.getElementById('content').innerHTML = t;
     const pull = fetch(FILENAME, {headers: {'Accept': 'text/markdown'}})
       .then((res) => {

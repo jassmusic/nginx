@@ -15,5 +15,5 @@ ln -s /app/data/nginx/php.ini /etc/php7/php.ini
 cp /app/data/custom/nginx/files/pre_start.sh /app/pre_start.sh
 cp /app/data/custom/nginx/files/index.html /app/data/nginx/www/index.html
 cp /app/data/custom/nginx/files/phpinfo.php /app/data/nginx/www/phpinfo.php
-cp /app/data/custom/nginx/files/manual.php /app/data/nginx/www/manual.php
+cp /app/data/custom/nginx/files/guide.php /app/data/nginx/www/guide.php
 chmod 777 -R /app/data/nginx
