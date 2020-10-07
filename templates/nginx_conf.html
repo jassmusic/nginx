@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div>
+  {{ macros.m_button_group([['global_setting_save_btn', '저장 & Reload']])}}
+  {{ macros.m_row_start('5') }}
+  {{ macros.m_row_end() }}
+  <form id='setting' name='setting'>
+    <div>
+      <textarea id="conf" name="conf" class="col-md-12" rows="60" charswidth="23" style="visibility:visible" value="">{{ arg['conf'] }}</textarea>
+    </div>
+  </form>
+</div> <!--전체-->
+
+<script type="text/javascript">
+var package_name = "{{arg['package_name']}}";
+var sub = "{{arg['sub'] }}";
+
+$(document).ready(function() {
+  ResizeTextArea()
+})
+
+function ResizeTextArea() {
+  ClientHeight = window.innerHeight
+  $("#conf").height(ClientHeight-240);
+  //$("#conf").height(ClientHeight-260);
+}
+
+$(window).resize(function() {
+  ResizeTextArea();
+});
+
+</script>    
+{% endblock %}

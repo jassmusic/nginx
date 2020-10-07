@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div>
+  {{ macros.m_button_group([['install_btn', '설치'], ['uninstall_btn', '삭제'], ['manual_go_btn', '매뉴얼'], ['nginx_test_btn', 'conf 저장 & nginx test'], ['nginx_reload_btn', 'nginx reload']])}}
+  설치 상태 : {{ arg['status_isntall'] }}
+  {{ macros.m_row_start('5') }}{{ macros.m_row_end() }}
+  <form id='setting' name='setting'>
+    <div>
+      <textarea id="conf" name="conf" class="col-md-12" rows="60" charswidth="23" style="visibility:visible" value="">{{ arg['conf'] }}</textarea>
+    </div>
+  </form>
+</div>
+
+<script type="text/javascript">
+var package_name = "{{arg['package_name']}}";
+var sub = "{{arg['sub']}}";
+var is_installed = "{{ arg['is_installed'] }}"  == 'True' ? true : false;
+
+
+$(document).ready(function() {
+  ResizeTextArea()
+})
+
+function ResizeTextArea() {
+  ClientHeight = window.innerHeight
+  $("#conf").height(ClientHeight-240);
+  //$("#conf").height(ClientHeight-260);
+}
+
+$(window).resize(function() {
+  ResizeTextArea();
+});
+
+
+$("body").on('click', '#install_btn', function(e){
+  e.preventDefault();
+  if ( is_installed ) {
+    document.getElementById("confirm_title").innerHTML = "설치 확인";
+    document.getElementById("confirm_body").innerHTML = "이미 설치 되어 있습니다.<br>재설치 하시겠습니까?";
+    $('#confirm_button').attr('onclick', "do_install();");
+    $("#confirm_modal").modal();
+    return;
+  } else {
+    do_install();
+  }
+});
+
+function do_install() {
+  $.ajax({
+    url: '/' + package_name + '/ajax/install',
+    type: "POST", 
+    cache: false,
+    data:{},
+    dataType: "json",
+    success: function (data) {
+      command_modal_show('설치')
+    }
+  });
+}
+
+$("body").on('click', '#uninstall_btn', function(e){
+  e.preventDefault();
+  if ( is_installed ) {
+    document.getElementById("confirm_title").innerHTML = "삭제 확인";
+    document.getElementById("confirm_body").innerHTML = "삭제시 SJVA 포트는 9999로 변경되고 SJVA 자동 재시작 됩니다.<br>삭제 하시겠습니까?";
+    $('#confirm_button').attr('onclick', "do_uninstall();");
+    $("#confirm_modal").modal();
+    return;
+  } else {
+    $.notify('<strong>설치되어 있지 않습니다.</strong>', {type: 'warning'});
+  }
+});
+
+function do_uninstall() {
+  $.ajax({
+    url: '/' + package_name + '/ajax/uninstall',
+    type: "POST", 
+    cache: false,
+    data:{},
+    dataType: "json",
+    success: function (data) {
+      command_modal_show('삭제')
+    }
+  });
+}
+
+
+$("body").on('click', '#manual_go_btn', function(e){
+  e.preventDefault();
+  if ( is_installed)
+    window.open('/www/manual.php?filename=home', "_blank");
+  else
+    $.notify('<strong>설치되어 있지 않습니다.</strong>', {type: 'warning'});
+});
+
+
+$("body").on('click', '#nginx_test_btn', function(e){
+  e.preventDefault();
+  nginx_command('test');
+});
+
+
+$("body").on('click', '#nginx_reload_btn', function(e){
+  e.preventDefault();
+  nginx_command('reload');
+});
+
+
+function nginx_command(command) {
+  if ( is_installed ) {
+    conf = document.getElementById("conf").value
+    $.ajax({
+      url: '/' + package_name + '/ajax/nginx_command',
+      type: "POST", 
+      cache: false,
+      data:{command:command, conf:conf},
+      dataType: "json",
+      success: function (data) {
+        m_modal(data, '결과');
+      }
+    });
+  } else {
+    $.notify('<strong>설치되어 있지 않습니다.</strong>', {type: 'warning'});
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$('#status').change(function() {
+  var ret = $(this).prop('checked');
+  $.ajax({
+    url: '/'+package_name+'/ajax/status',
+    type: "POST", 
+    cache: false,
+    data: {todo : ret},
+    dataType: "json",
+    success: function (list) {
+    }
+  });
+});
+
+$("body").on('click', '#go_btn', function(e){
+  e.preventDefault();
+  url = document.getElementById("url").value
+  window.open(url, "_blank");
+});
+
+
+$("body").on('click', '#version_check_btn', function(e){
+  e.preventDefault();
+  $.ajax({
+    url: '/' + package_name + '/ajax/version_check',
+    type: "POST", 
+    cache: false,
+    data:{},
+    dataType: "json",
+    success: function (data) {
+      if (data.ret) {
+        $.notify('<strong>버전 : '+ data.data+'</strong>', {
+          type: 'success'
+        });
+      } else {
+        $.notify('<strong>실패 : ' + data.data + '</strong>', {
+          type: 'warning'
+        });
+      }
+    }
+  });
+});
+
+$("body").on('click', '#update_btn', function(e){
+  e.preventDefault();
+  $.ajax({
+    url: '/' + package_name + '/ajax/update',
+    type: "POST", 
+    cache: false,
+    data:{},
+    dataType: "json",
+    success: function (data) {
+      command_modal_show('업데이트')
+    }
+  });
+});
+
+</script>    
+{% endblock %}
