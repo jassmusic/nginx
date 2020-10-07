@@ -2,7 +2,7 @@
 {% block content %}
 
 <div>
-  {{ macros.m_button_group([['install_btn', '설치'], ['uninstall_btn', '삭제'], ['manual_go_btn', '매뉴얼'], ['nginx_test_btn', 'conf 저장 & nginx test'], ['nginx_reload_btn', 'nginx reload']])}}
+  {{ macros.m_button_group([['install_btn', '설치'], ['uninstall_btn', '삭제'], ['manual_go_btn', '가이드'], ['nginx_test_btn', 'conf 저장 & nginx test'], ['nginx_reload_btn', 'nginx reload']])}}
   설치 상태 : {{ arg['status_isntall'] }}
   {{ macros.m_row_start('5') }}{{ macros.m_row_end() }}
   <form id='setting' name='setting'>
@@ -89,7 +89,7 @@ function do_uninstall() {
 $("body").on('click', '#manual_go_btn', function(e){
   e.preventDefault();
   if ( is_installed)
-    window.open('/www/manual.php?filename=home', "_blank");
+    window.open('/www/guide.php?filename=home', "_blank");
   else
     $.notify('<strong>설치되어 있지 않습니다.</strong>', {type: 'warning'});
 });
