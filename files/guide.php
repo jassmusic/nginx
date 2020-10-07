@@ -1,6 +1,6 @@
 <?php 
 $filename = $_GET['filename']; 
-if ($filename == '') {
+if (empty($filename)) {
   $filename = 'home';
 }
 ?>
