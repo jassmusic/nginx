@@ -115,17 +115,22 @@ class LogicNginx(LogicModuleBase):
 
     def program_install(self, title, script_url, arg):
         def func():
-            os.system('wget -O /app/data/tmp/install.sh %s' % script_url)
-            os.system('chmod 777 /app/data/tmp/install.sh')
-            time.sleep(1)
-            cmd = ['/app/data/tmp/install.sh']
-            if arg is not None:
-                cmd.append(arg)
-            return_log = SystemLogicCommand2('%s 설치' % title, [
-                ['msg', u'잠시만 기다려주세요.'],
-                cmd,
-                ['msg', u'설치가 완료되었습니다.'],
-            ], wait=False, show_modal=True).start()
+            try:
+                logger.debug('INSTALL : %s %s %s %s', title, script_url, arg)
+                os.system('wget -O /app/data/tmp/install.sh %s' % script_url)
+                os.system('chmod 777 /app/data/tmp/install.sh')
+                time.sleep(1)
+                cmd = ['/app/data/tmp/install.sh']
+                if arg is not None:
+                    cmd.append(arg)
+                return_log = SystemLogicCommand2('%s 설치' % title, [
+                    ['msg', u'잠시만 기다려주세요.'],
+                    cmd,
+                    ['msg', u'설치가 완료되었습니다.'],
+                ], wait=False, show_modal=True).start()
+            except Exception as e: 
+                logger.error('Exception:%s', e)
+                logger.error(traceback.format_exc())
         t = threading.Thread(target=func, args=())
         t.setDaemon(True)
         t.start()
