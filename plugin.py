@@ -15,19 +15,19 @@ class P(object):
     logger = get_logger(package_name)
     blueprint = Blueprint(package_name, package_name, url_prefix='/%s' %  package_name, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
     menu = {
-        'main' : [package_name, 'NGINX'],
+        'main' : [package_name, u'NGINX'],
         'sub' : [
-            ['setting', '설정'], ['log', '로그']
+            ['setting', u'설정'], ['log', u'로그']
         ], 
         'category' : 'tool',
     }  
     plugin_info = {
         'version' : '0.2.0.0',
-        'name' : 'nginx',
+        'name' : u'nginx',
         'category_name' : 'tool',
         'icon' : '',
         'developer' : 'soju6jan',
-        'description' : 'nginx proxy',
+        'description' : u'nginx proxy',
         'home' : 'https://github.com/soju6jan/nginx',
         'more' : '',
     }
