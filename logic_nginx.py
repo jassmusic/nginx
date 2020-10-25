@@ -10,7 +10,7 @@ import requests
 from flask import request, render_template, jsonify, redirect
 from sqlalchemy import or_, and_, func, not_, desc
 # sjva 공용
-from framework import app, db, scheduler, path_data, socketio, SystemModelSetting
+from framework import app, db, scheduler, path_data, socketio, SystemModelSetting, path_app_root
 from framework.util import Util
 from framework.common.util import headers, get_json_with_auth_session
 from framework.common.plugin import LogicModuleBase, FfmpegQueueEntity, FfmpegQueue, default_route_socketio
@@ -64,6 +64,21 @@ class LogicNginx(LogicModuleBase):
             arg = req.args.get('arg')
             self.program_install(title, url, arg)
             return redirect('/nginx/setting')
+    
+    def process_api(self, sub, req):
+        if sub == 'install':
+            title = request.form['title']
+            script = request.form['script']
+            mode = request.form['mode']
+            import base64
+            script = base64.b64decode(script)
+            script = script.split('<SCRIPT_START>')[1].split('<SCRIPT_END>')[0].strip()
+            script = script.format(sjva_root=path_app_root)
+            write_file(script, '{}/data/tmp/install.sh'.format(path_app_root))
+            logger.debug(script)
+            self.program_install(title, None, mode)
+            return jsonify({"log":"SJVA에서 확인하세요."})
+
 
     def plugin_load(self):
         data_path = os.path.join(path_data, P.package_name)
@@ -83,7 +98,7 @@ class LogicNginx(LogicModuleBase):
         def func():
             return_log = SystemLogicCommand2('설치', [
                 ['msg', u'잠시만 기다려주세요.'],
-                ['/app/data/custom/nginx/files/install.sh'],
+                ['{}/data/custom/nginx/files/install.sh'.format(path_app_root)],
                 ['msg', u'설치가 완료되었습니다.'],
                 ['msg', u'SJVA가 아닌 도커를 재시작 해주세요.'],
                 ['msg', u'예) docker restart sjva'],
@@ -100,8 +115,8 @@ class LogicNginx(LogicModuleBase):
             return_log = SystemLogicCommand2('삭제', [
                 ['msg', u'잠시만 기다려주세요.'],
                 ['msg', u'kill.sh 명령 실행 후 웹은 반응이 없습니다. 자동 SJVA 재시작하니 잠시 후 새로고침하세요.'],
-                ['/app/data/custom/nginx/files/kill.sh'],
-                ['/app/data/custom/nginx/files/uninstall.sh'],
+                ['{}/data/custom/nginx/files/kill.sh'.format(path_app_root)],
+                ['{}/data/custom/nginx/files/uninstall.sh'.format(path_app_root)],
                 ['msg', u'삭제가 완료되었습니다.'],
             ], wait=True, show_modal=True).start()
             import system
@@ -116,9 +131,10 @@ class LogicNginx(LogicModuleBase):
     def program_install(self, title, script_url, arg):
         def func():
             try:
-                logger.debug('INSTALL : %s %s %s %s', title, script_url, arg)
-                os.system('wget -O /app/data/tmp/install.sh %s' % script_url)
-                os.system('chmod 777 /app/data/tmp/install.sh')
+                logger.debug('INSTALL : %s %s %s', title, script_url, arg)
+                if script_url is not None:
+                    os.system('wget -O {}/data/tmp/install.sh {}'.format(path_app_root, script_url))
+                os.system('chmod 777 {}/data/tmp/install.sh'.format(path_app_root))
                 time.sleep(1)
                 cmd = ['/app/data/tmp/install.sh']
                 if arg is not None:
