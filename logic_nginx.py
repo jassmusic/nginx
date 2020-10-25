@@ -139,6 +139,7 @@ class LogicNginx(LogicModuleBase):
                 cmd = ['{}/data/tmp/install.sh'.format(path_app_root)]
                 if arg is not None:
                     cmd.append(arg)
+                logger.debug('cmd : %s', cmd)
                 return_log = SystemLogicCommand2('%s 설치' % title, [
                     ['msg', u'잠시만 기다려주세요.'],
                     cmd,
