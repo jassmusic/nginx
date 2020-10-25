@@ -72,7 +72,7 @@ class LogicNginx(LogicModuleBase):
             mode = request.form['mode']
             import base64
             script = base64.b64decode(script)
-            script = script.split('<SCRIPT_START>')[1].split('<SCRIPT_END>')[0].strip()
+            script = script.split('<SCRIPT_START>')[1].split('<SCRIPT_END>')[0].strip().replace('\r\n', '\n') + '\n'
             script = script.format(sjva_root=path_app_root)
             write_file(script, '{}/data/tmp/install.sh'.format(path_app_root))
             logger.debug(script)
