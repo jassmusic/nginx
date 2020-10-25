@@ -76,6 +76,7 @@ class LogicNginx(LogicModuleBase):
             script = script.format(sjva_root=path_app_root)
             write_file(script, '{}/data/tmp/install.sh'.format(path_app_root))
             logger.debug(script)
+            logger.debuf(os.path.exists('{}/data/tmp/install.sh'.format(path_app_root)))
             self.program_install(title, None, mode)
             return jsonify({"log":"SJVA에서 확인하세요."})
 
