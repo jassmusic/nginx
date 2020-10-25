@@ -74,8 +74,8 @@ class LogicNginx(LogicModuleBase):
             script = base64.b64decode(script)
             logger.debug(script)
             script = script.split('===SCRIPT_START===')[1].split('===SCRIPT_END===')[0].strip()
-            
-            script = re.sub('(<([^>]+)>)', '', script).replace('&nbsp;', ' ').replace('<br>', '\n')
+            script = script.replace('&nbsp;', ' ').replace('</p>', '\n').replace('<br>', '\n')
+            script = re.sub('(<([^>]+)>)', '', script)
             script = script.replace('\r\n', '\n').strip()
             script = script + '\n'
             script = script.format(sjva_root=path_app_root)
