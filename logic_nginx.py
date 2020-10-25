@@ -72,6 +72,7 @@ class LogicNginx(LogicModuleBase):
             mode = request.form['mode']
             import base64
             script = base64.b64decode(script)
+            logger.debug(script)
             script = script.split('===SCRIPT_START===')[1].split('===SCRIPT_END===')[0].strip()
             
             script = re.sub('(<([^>]+)>)', '', script).replace('&nbsp;', ' ').replace('<br>', '\n')
