@@ -137,7 +137,7 @@ class LogicNginx(LogicModuleBase):
                     os.system('wget -O {}/data/tmp/install.sh {}'.format(path_app_root, script_url))
                 os.system('chmod 777 {}/data/tmp/install.sh'.format(path_app_root))
                 time.sleep(1)
-                cmd = ['{}/data/tmp/install.sh'.format(path_app_root)]
+                cmd = ['sh', '{}/data/tmp/install.sh'.format(path_app_root)]
                 if arg is not None:
                     cmd.append(arg)
                 logger.debug('cmd : %s', cmd)
