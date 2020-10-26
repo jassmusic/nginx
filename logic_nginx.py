@@ -91,7 +91,8 @@ class LogicNginx(LogicModuleBase):
         data_path = os.path.join(path_data, P.package_name)
         if not os.path.exists(data_path):
             os.makedirs(data_path)
-        return_log = SystemLogicCommand.execute_command_return(['chmod', '777', '-R', '{}/data/custom/nginx/files'.format(path_app_root)])
+        #return_log = SystemLogicCommand.execute_command_return(['chmod', '777', '-R', '{}/data/custom/nginx/files'.format(path_app_root)])
+        os.system('chmod 777 -R {}/data/custom/nginx/files'.format(path_app_root))
         logger.debug('nginx plugin_load end')
         
     def plugin_unload(self):
