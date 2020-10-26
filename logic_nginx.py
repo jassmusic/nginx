@@ -87,12 +87,13 @@ class LogicNginx(LogicModuleBase):
 
 
     def plugin_load(self):
+        logger.debug('nginx plugin_load start')
         data_path = os.path.join(path_data, P.package_name)
         if not os.path.exists(data_path):
             os.makedirs(data_path)
         return_log = SystemLogicCommand.execute_command_return(['chmod', '777', '-R', '{}/data/custom/nginx/files'.format(path_app_root)])
-        return
-
+        logger.debug('nginx plugin_load end')
+        
     def plugin_unload(self):
         #return_log = SystemLogicCommand.execute_command_return(['/app/data/custom/nginx/files/kill.sh'])
         pass
