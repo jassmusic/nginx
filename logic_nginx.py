@@ -16,7 +16,7 @@ from framework.common.util import headers, get_json_with_auth_session
 from framework.common.plugin import LogicModuleBase, FfmpegQueueEntity, FfmpegQueue, default_route_socketio
 from system.logic_command import SystemLogicCommand
 from system.logic_command2 import SystemLogicCommand2
-from framework.common.util import read_file, write_file
+from framework.common.util import read_file, write_file, is_termux
 # 패키지
 from .plugin import P
 logger = P.logger
@@ -104,13 +104,17 @@ class LogicNginx(LogicModuleBase):
 
     def install(self):
         def func():
-            return_log = SystemLogicCommand2('설치', [
+            cmd =  [
                 ['msg', u'잠시만 기다려주세요.'],
                 ['{}/data/custom/nginx/files/install.sh'.format(path_app_root)],
                 ['msg', u'설치가 완료되었습니다.'],
-                ['msg', u'SJVA가 아닌 도커를 재시작 해주세요.'],
-                ['msg', u'예) docker restart sjva'],
-            ], wait=False, show_modal=True).start()
+            ]
+            if is_termux():
+                cmd.append(['msg', u'termux를 재시작 해주세요.'])
+            else:
+                cmd.append(['msg', u'SJVA가 아닌 도커를 재시작 해주세요.'])
+                cmd.append(['msg', u'예) docker restart sjva'])
+            return_log = SystemLogicCommand2('설치', cmd, wait=False, show_modal=True).start()
         if SystemModelSetting.get('port') != '19999':
             SystemModelSetting.set('port', '19999')
 
