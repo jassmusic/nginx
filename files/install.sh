@@ -5,8 +5,9 @@
 sed -i 's/listen\ =\ \/data\/data\/com.termux\/files\/usr\/var\/run\/php-fpm.sock/listen\ =\ 127.0.0.1:9000/' /data/data/com.termux/files/usr/etc/php-fpm.d/www.conf
 
 # nginx conf update
-cd /data/data/com.termux/files/usr/etc/nginx
-curl -LO https://raw.githubusercontent.com/jassmusic/termux/master/nginx.conf
+#cd /data/data/com.termux/files/usr/etc/nginx
+#curl -LO https://raw.githubusercontent.com/jassmusic/termux/master/nginx.conf
+cp ~/app/data/custom/nginx/files/nginx.conf /data/data/com.termux/files/usr/etc/nginx
 
 # make nginx dir
 mkdir -p ~/app/data/nginx
