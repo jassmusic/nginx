@@ -1,5 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
+
 # nginx install
+pkg install termux-services
+apt -y install nmap sqlite nginx php-fpm
 
 # php-fpm update
 sed -i 's/listen\ =\ \/data\/data\/com.termux\/files\/usr\/var\/run\/php-fpm.sock/listen\ =\ 127.0.0.1:9000/' /data/data/com.termux/files/usr/etc/php-fpm.d/www.conf
