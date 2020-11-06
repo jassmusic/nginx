@@ -17,7 +17,7 @@ mkdir -p ~/app/data/nginx
 mkdir -p ~/app/data/nginx/www
 cd ~/app/data/nginx
 ln -s /data/data/com.termux/files/usr/etc/nginx/nginx.conf nginx.conf
-cp ~/app/data/custom/nginx/files/php.ini ~/app/data/nginx
+#cp ~/app/data/custom/nginx/files/php.ini ~/app/data/nginx
 cp ~/app/data/custom/nginx/files/index.html ~/app/data/nginx/www
 cp ~/app/data/custom/nginx/files/phpinfo.php ~/app/data/nginx/www
 cp ~/app/data/custom/nginx/files/guide.php ~/app/data/nginx/www
